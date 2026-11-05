@@ -2,6 +2,7 @@
 week: 1
 status: "예정"
 author: ""
+study_scheduled: "2026-11-06T09:00:00+09:00"
 study_started: ""
 study_finished: ""
 paper_title: "Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity"
@@ -12,7 +13,8 @@ source_verified_on: "2026-11-05"
 # 01주차 — Switch Transformers
 
 - 학습 상태: **예정**
-- 시작일: 미정
+- 예정 일시: **2026년 11월 6일(금) 오전 9시(한국 시간, Asia/Seoul)**
+- 실제 시작일: 미정
 - 정식 논문명: Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity
 - 연구 기관/팀: Google
 - 원문: [Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity](https://arxiv.org/abs/2101.03961)
