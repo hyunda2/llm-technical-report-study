@@ -16,6 +16,9 @@
 
 - 음슴체 사용함.
 - 핵심만 최소한으로 작성함. 이해에 꼭 필요한 내용은 판단해 추가함.
+- 용어는 처음에 쉽게 설명하고, 핵심 방법의 작동 과정까지 설명함.
+- 원문 확인 사실·저자의 주장·GPT의 해석을 구분함. 본문 접근 제한이나 수치 불일치는 명시함.
+- 논문 링크·제목·파일을 보내면 원문 확인 후 한국어로 정리함. 일반 연구 논문은 [논문 정리 템플릿](templates/paper-summary.md) 순서 사용함.
 
 ## 진행 방식
 
@@ -51,6 +54,7 @@ README.md
 PLAN.md
 AGENTS.md
 templates/study-post.md
+templates/paper-summary.md
 posts/week-01/README.md … posts/week-10/README.md
 .github/PULL_REQUEST_TEMPLATE.md
 .github/ISSUE_TEMPLATE/study-log.md
