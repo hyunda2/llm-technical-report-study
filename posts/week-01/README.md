@@ -1,10 +1,10 @@
 ---
 week: 1
-status: "진행 중"
+status: "완료"
 author: "hyunda2"
 study_scheduled: "2026-11-06T09:00:00+09:00"
 study_started: ""
-study_finished: ""
+study_finished: "2026-11-06"
 paper_title: "Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity"
 paper_url: "https://arxiv.org/abs/2101.03961"
 source_verified_on: "2026-11-06"
@@ -21,7 +21,7 @@ source_verified_on: "2026-11-06"
 | Venue | 정식 출판은 학회가 아닌 **JMLR 23(120):1–39, 2022**임; arXiv는 preprint·개정본 제공 경로임 |
 | 저자·소속 | William Fedus, Barret Zoph, Noam Shazeer · 논문 기재 소속 Google |
 | 논문·코드 | [arXiv 이력](https://arxiv.org/abs/2101.03961) · [확인한 본문 v3](https://arxiv.org/html/2101.03961v3) · [JMLR](https://jmlr.org/papers/v23/21-0998.html) · [JAX/T5X](https://github.com/google-research/t5x) · [TensorFlow/Mesh](https://github.com/tensorflow/mesh/blob/master/mesh_tensorflow/transformer/moe.py) |
-| 진행 상태 | **진행 중** · 예정 일시 2026-11-06 오전 9시, 한국 시간 · 실제 시작일 미기록 · 완료일 미정 |
+| 진행 상태 | **완료** · 예정 일시 2026-11-06 오전 9시, 한국 시간 · 실제 시작일 미기록 · 완료일 2026-11-06(사용자 확인) |
 
 ## 읽기 표시
 
@@ -344,7 +344,7 @@ Distillation, 즉 큰 모델의 출력을 작은 모델이 학습하게 하는 �
 
 ## 7. GPT 질의응답
 
-제공된 Q1–Q30을 유지하고 답변은 한 문장 중심으로 압축함.
+1차 Q1–Q30을 유지하고 2차 Q&A 12개를 Q31–Q42로 추가함; 답변은 한 문장 중심으로 압축함.
 **A는 모두 GPT의 해설이며, 사용자 생각이나 저자의 직접 발언으로 취급하지 않음.**
 아래에는 원문 대조에 따른 교정도 반영했으며, 교정 전 답변은 [Q&A 원문](qa-original.md)에 남김.
 
@@ -497,6 +497,121 @@ Q22는 제공된 답변의 “표준편차 1/10” 설명을 교정함.
 근거·추가 해설: [Switch §1·4·6](https://arxiv.org/html/2101.03961v3), [FLAN 원문](https://arxiv.org/abs/2109.01652).
 Q28의 성공 이유와 Q30의 연결은 GPT의 해석임.
 
+### 2차 스터디 — Q31–Q42
+
+추가로 제공한 Q1–Q12를 기존 번호에 이어 정리함.
+
+#### Expert Capacity와 토큰 처리
+
+**Q31:** 한 Expert에 토큰이 많이 배정되면 다른 Expert의 Capacity가 줄어듦?
+
+**A:** Capacity는 같은 라우팅 그룹의 모든 Expert에 동일하게 정한 상한이므로 서로 빼앗지 않으며, 고정된 전체 토큰 수 안에서 실제 배정량만 달라짐.
+
+**Q32:** Switch Transformer는 왜 Masked Language Modeling Loss를 사용했음?
+
+**A:** T5 기반의 가려진 텍스트 구간 복원 목표인 Span Corruption을 사용해, 같은 사전학습 목표에서 Dense T5와 비교했음.
+
+**Q33:** `I am a bird`의 토큰은 동시에 Expert로 보내는가, 독립적으로 계산하는가?
+
+**A:** 각 토큰은 문맥이 반영된 Hidden State로 독립적으로 Expert를 선택하되, 실제 FFN은 같은 Expert에 배정된 토큰을 묶어 병렬 처리함.
+
+> 🔎 **GPT의 예시:** `I`·`bird`→Expert 1, `am`→Expert 2, `a`→Expert 3으로 배정될 수 있음; 실제 토큰화 결과나 관측된 라우팅이 아닌 단순화한 예시이며, Capacity 초과 토큰은 해당 FFN을 건너뜀.
+
+근거: [Switch §2.1–2.3, Figure 2–3](https://arxiv.org/html/2101.03961v3).
+
+#### 학습 데이터와 Knowledge Distillation
+
+**Q34:** Claude가 생성한 데이터로 학습하면 Claude가 잘하는 벤치마크 성능을 따라잡을 수 있음?
+
+**A:** 따라잡을 가능성은 있지만 보장되지 않으며, 교사의 출력으로 학생을 학습하는 증류 효과는 데이터 품질·난도·검증과 학생 모델의 역량 및 학습 조건에 달려 있음.
+
+> 🔎 **스터디에서 논의한 적용 가설:** 외부 전문 문서를 근거로 문제·풀이·정답을 생성하고 검증하면 교사 모델의 자체 생성만 사용할 때보다 지식 범위와 난도를 넓힐 수 있음; Claude를 대상으로 이 우위를 검증한 결과는 제공되지 않았으므로 실험으로 확인할 제안으로 남김.
+
+근거·범위: [Knowledge Distillation 원문](https://arxiv.org/abs/1503.02531)은 일반적인 교사→학생 학습의 근거이며, Claude의 특정 벤치마크 성능을 보장하는 근거는 아님.
+
+#### 평가 지표와 Scaling Efficiency
+
+**Q35:** 왜 일반 벤치마크 대신 Negative Log Perplexity를 사용했음?
+
+**A:** 사전학습의 예측 손실과 직접 연결되는 지표로 계산량·학습 시간 대비 품질을 비교하기 위함이며, SuperGLUE 등 Downstream 평가도 별도로 수행했음.
+
+**Q36:** Negative Log Perplexity가 0.17 개선되면 실제로 얼마나 큰 차이임?
+
+**A:** Table 1의 동일한 100k Step 비교에서 Perplexity는 약 15.6% 줄고 정답 토큰에 부여한 확률의 기하평균은 약 18.5% 늘지만, 이를 QA·추론 정확도의 동일한 비율 향상으로 해석할 수는 없음.
+
+| 지표 | T5-Base | Switch-Base | 변화 |
+| --- | ---: | ---: | ---: |
+| Negative log perplexity ↑ | -1.731 | -1.561 | +0.170 |
+| Perplexity ↓ | 5.65 | 4.76 | 약 15.6% 감소 |
+| 정답 토큰 확률의 기하평균 ↑ | 17.7% | 21.0% | 약 18.5% 상대 증가, +3.3%p |
+
+> 🔎 **GPT의 추가 계산:** 첫 행은 원문 수치이며, 아래 두 행은 자연로그 기준으로 변환한 값임; Switch는 Capacity Factor 1.0·128 Experts·격층 Expert 구성이고, 두 모델 모두 TPUv3 32코어·100k Step 조건임.
+
+```math
+H=-\frac{1}{M}\sum_{t=1}^{M}\ln p(y_t\mid\mathrm{context},y_{<t}),\qquad
+\mathrm{PPL}=e^H,\qquad
+p_{\mathrm{geom}}=e^{-H}
+```
+
+`M`은 평가 대상 출력 토큰 수이며, 이 논문에서는 가려진 구간을 복원하는 예측을 평가함.
+Negative log perplexity는 `−H`이므로 높을수록 좋고, 기하평균 확률은 정답을 맞힌 비율인 정확도와 다름.
+이 표는 동일 Step 비교이며 동일 경과 시간에서의 비교는 아님.
+
+근거: [Switch §2.3·Table 1·§4](https://arxiv.org/html/2101.03961v3).
+
+#### Precision과 Mixed Precision
+
+**Q37:** 임베딩 모델은 FP64를 쓰며, 2021년과 현재는 어떻게 다름?
+
+**A:** FP64를 임베딩 모델의 기본값으로 볼 근거는 없으며, 모델의 계산 정밀도와 저장하는 벡터의 형식은 별개이므로 시기만으로 단정하지 말고 해당 구현의 FP32·BF16·FP16 및 출력 설정을 확인해야 함.
+
+> ✅ **범위 보완:** “2021년은 FP32 중심, 현재는 BF16·FP16 중심”이라는 시대별 보급률은 이번 자료로 확인하지 못함; 공식 구현의 구체적인 예로 Sentence Transformers는 FP16·BF16 추론을 지원하며, `encode`의 출력 정밀도 옵션 기본값은 `float32`이고 양자화 옵션도 있음.
+
+**Q38:** Mixed Precision이란?
+
+**A:** 연산별로 BF16·FP16과 FP32 등을 섞어, 큰 행렬 곱셈의 메모리·계산 부담을 줄이면서 정밀도에 민감한 부분의 수치 안정성을 확보하는 기법임.
+
+**Q39:** Mixed Precision은 어떤 원리로 작동함?
+
+**A:** 주요 행렬 연산은 저정밀도로 수행하고 민감한 누적·업데이트 등은 더 높은 정밀도로 처리해 반올림 오차를 줄이며, 정확한 배치는 학습 구현에 따라 달라짐.
+
+> 🔎 **GPT의 수치 예시:** `1.000000 − 0.0001 = 0.9999`를 BF16에 바로 저장하면 반올림되어 `1.0`이 될 수 있지만 FP32에는 변화가 남음; FP32 원본 가중치를 유지하는 구현은 작은 업데이트를 누적할 수 있으며, 모든 Mixed Precision 구현이 반드시 같은 원본 가중치 방식을 쓰는 것은 아님.
+
+근거·보충: [PyTorch AMP 공식 문서](https://docs.pytorch.org/docs/stable/amp.html) · [Sentence Transformers 추론 정밀도](https://sbert.net/docs/sentence_transformer/usage/efficiency.html) · [출력 정밀도 옵션](https://sbert.net/docs/package_reference/sentence_transformer/SentenceTransformer.html).
+Switch의 구체적인 선택은 위 §4.4처럼 Router 로컬 계산을 FP32로 유지하는 방식임.
+
+#### 범용 NLP와 Expert Specialization
+
+**Q40:** MoE가 기계번역에서 성공했는데 왜 범용 NLP에도 적용하려 했음?
+
+**A:** 복잡한 라우팅·통신 비용·학습 불안정을 줄여, MoE의 모델 용량 확장이 T5 기반 사전학습·파인튜닝·멀티태스크 학습에도 유효한지 확인하려 했음.
+
+근거: [Switch §1·2·4·6](https://arxiv.org/html/2101.03961v3).
+
+**Q41:** 최신 MoE의 Expert는 Knowledge·Reasoning 또는 Task별로 역할이 구분됨?
+
+**A:** 일반적인 토큰 라우팅 MoE는 사람이 지식·추론 역할을 미리 배정하지 않으며, 학습된 Expert의 전문화는 Task·분야·언어·세부 특징 등 여러 수준에서 분석해야 함.
+
+**Q42:** Expert의 실제 역할과 전문화를 분석한 관련 논문은?
+
+**A:** DeepSeekMoE는 전문화를 유도하는 구조를 제안하고, The Expert Strikes Back과 Understanding Multilingualism in Mixture-of-Experts LLMs는 각각 Expert의 세부 기능과 언어·층별 라우팅을 분석함.
+
+| 논문·최초 공개 | 원문에서 확인한 초점 |
+| --- | --- |
+| [DeepSeekMoE: Towards Ultimate Expert Specialization in Mixture-of-Experts Language Models](https://arxiv.org/abs/2401.06066) · 2024-01-11 | 잘게 나눈 Routed Expert와 공통 지식을 담당하도록 설계한 Shared Expert를 결합해 중복을 줄이고 전문화를 유도함 |
+| [The Expert Strikes Back: Interpreting Mixture-of-Experts Language Models at Expert Level](https://arxiv.org/abs/2604.02178) · 2026-04-02, 개정 2026-05-15 | 조사한 모델에서 넓은 Task·분야 구분보다 세부 언어적 연산·의미 기능 수준의 Expert 역할을 분석함 |
+| [Understanding Multilingualism in Mixture-of-Experts LLMs: Routing Mechanism, Expert Specialization, and Layerwise Steering](https://arxiv.org/abs/2601.14050) · 2026-01-20 | 언어별 공유·전용 Expert와 층별 라우팅 차이를 분석하며, 저자 실험에서는 초기·후기 층의 언어별 특성과 중간 층의 공유 경향을 관찰함 |
+
+> 🔎 **GPT의 해석·범위:** 세 논문의 목적과 분석 방법은 다르며, 관찰 결과를 모든 MoE나 지식·추론 능력의 분리로 일반화할 수는 없음; Shared Expert라는 구조적 구분만으로 각 Expert가 실제로 무엇을 아는지까지 입증되지는 않음.
+
+### 2차 스터디 마무리
+
+2026-11-06 스터디 완료했으며, 사용자 정리에서 다음 내용을 기록함.
+
+- 토큰 처리·Capacity·사전학습 지표·Mixed Precision의 작동 원리를 구체화함.
+- 데이터 증류와 Expert Specialization으로 논의를 확장함.
+- 남은 질문: **Expert가 실제로 어떤 기능을 학습하며, 토큰 패턴 수준의 전문화가 지식·추론 능력의 분화로 이어지는가?**
+
 ### ✅ 필사·Q&A 교정 요약
 
 | 원래 메모·답변 | 정리하면서 보완한 내용 |
@@ -514,5 +629,6 @@ Q28의 성공 이유와 Q30의 연결은 GPT의 해석임.
 - 사용자 자료: [필사 원문](notes-original.md) · [GPT Q&A 원문](qa-original.md).
 - Switch: [arXiv 이력](https://arxiv.org/abs/2101.03961) · [본문 v3](https://arxiv.org/html/2101.03961v3) · [JMLR 출판 정보](https://jmlr.org/papers/v23/21-0998.html).
 - 관련 원문: [2017 MoE](https://arxiv.org/html/1701.06538) · [ST-MoE](https://arxiv.org/html/2202.08906v2) · [Mixtral](https://arxiv.org/html/2401.04088) · [DeepSeekMoE](https://arxiv.org/abs/2401.06066) · [DeepSeek-V3](https://arxiv.org/html/2412.19437v2) · [MegaBlocks](https://arxiv.org/abs/2211.15841) · [FLAN](https://arxiv.org/abs/2109.01652).
-- 보충 개념: [JAX 공식 문서](https://docs.jax.dev/en/latest/).
+- 보충 개념: [JAX 공식 문서](https://docs.jax.dev/en/latest/) · [Knowledge Distillation](https://arxiv.org/abs/1503.02531) · [PyTorch AMP](https://docs.pytorch.org/docs/stable/amp.html).
+- 2차 전문화 조사: [The Expert Strikes Back](https://arxiv.org/abs/2604.02178) · [Understanding Multilingualism in Mixture-of-Experts LLMs](https://arxiv.org/abs/2601.14050).
 - 원문 대조일: 2026-11-06이며 실제 학습 시작일과는 별도임.
