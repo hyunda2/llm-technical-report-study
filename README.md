@@ -26,7 +26,7 @@
 
 - 전체 기간: 10주, 매주 1편. **1주차 스터디는 2026년 11월 6일 완료함**(한국 시간, Asia/Seoul).
 - 실제 학습 시작일은 미기록이며 2~10주차 일정은 미정임. 예정 일시와 실제 시작일을 구분해 기록함.
-- 현재 학습 상태는 **1주차 완료, 2~10주차 예정**임. 파일 생성이나 커밋만으로 학습 완료 처리하지 않음.
+- 현재 학습 상태는 **1주차 완료, 2주차 진행 중, 3~10주차 예정**임. 파일 생성이나 커밋만으로 학습 완료 처리하지 않음.
 - [PLAN.md](PLAN.md)에서 주제·원문·진행 상태를 확인합니다.
 - 주차별 글과 일정·운영 문서는 `main`에서 직접 수정합니다. 학습 기록용 Issue는 필요할 때 사용합니다.
 - [공통 템플릿](templates/study-post.md)과 해당 주차 글을 사용함. 미학습 부분은 작성란으로 남겨 둠.
@@ -39,7 +39,7 @@
 | 주차 | 학습 주제 | 글 | 상태 |
 | --- | --- | --- | --- |
 | 01 | Switch Transformers | [읽기 기록](posts/week-01/README.md) | 완료 |
-| 02 | Mixtral of Experts | [초안](posts/week-02/README.md) | 예정 |
+| 02 | Mixtral of Experts | [읽기 기록](posts/week-02/README.md) | 진행 중 |
 | 03 | DeepSeekMoE | [초안](posts/week-03/README.md) | 예정 |
 | 04 | DeepSeek-V3 | [초안](posts/week-04/README.md) | 예정 |
 | 05 | Qwen3.8-Next | [초안](posts/week-05/README.md) | 예정 |

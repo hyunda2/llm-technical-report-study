@@ -1,0 +1,47 @@
+- Mixtral (2401)
+    - Mixtral 8 x 7B (이걸 보니 7B expert 8개짜리인 것 같음. 그럼 56B?)
+    - Sparse Mixture of Experts(그냥 MoE랑 뭐가 다른거지? MoE는 원래 Sparse한거 아닌가?)
+    - each layer is composed of 8 feedforward blocks (Transformer에서 FFN layer의 역할: 비선형 변환 맞나? )
+    - “for every token” router network selects two experts to precess the current state and combine thier outputs(파이프라인 궁금 그려서 보여주면 좋겠음 구현 level로)
+    - “the selected experts can be different at each timestep”
+    - each token has access to 47B params but only use 13B active params during inference(7Bx2인데 왜 13B?)
+    - trained with a context size of 32k tokens and outperforms or matchs Llama 70B and GPT 3.5
+    - particulary outperforms Llama 70B on math, code gen, and multilingual
+    - instruction tuned — Mixtral 8x7B-instruct → Surpass GPT3.5Turbo, Claude2.1,Gemini Pro, Llama 70B on “human benchmark” (human bench가 뭐지? 사람이 평가했다는건가?)
+    (그나저나 오픈 모델이 클로즈드 모델 성능 넘던 시절도 있었군….. 이제는 왜 안되는거지? 가장 큰 요인이 뭔가? GPU와 모델 크기?)
+    - (Apache2.0은 어떤 license? 특징 간단하게 짧게만)
+    - “using subset of its parameters for every token”, “Allows faster inference speed at low batch-sizes”, “and higher throughput at large batch-sizes” (faster inference speed는 알겠는데—사용하는 param 수가 적어지니까— 아 faster at low batch size구나. 이건 무슨소리지? 그리고 higher throughput at large batch size는 무슨 소리지? 왜 batch size 조건이 붙는거지? 원리가 뭐지?)
+    - Mixtral is decoder-only model.
+    - at every layer, for every token, a router network chooses two of experts to process the token(그럼 모든 FFN마다 8개의 FFN이 있는건가? 그럼 expert라는건 layer별로 다르게 존재하는건가?) “and combine their output additively(단어뜻?)
+    - 장점:increase the number of parameters of a model while controlling cost and latency. why? as the model only uses a fraction of the total set of params per token
+    - Mixtral is pretrained with multilingual data using a context size of 32k tokens. (pretraining에서 context size가 왜중요? 어차피 생각해보니 next token prediction 아닌가? 라고 생각했는데 생각해보니 LC 학습도 있으니………. 그럼 입력은 마스킹하고 답만 Next Token Prediction하는건가?)
+    - (Figure 1의 Mixture of Experts Layer에서 router의 gating weights는 왜 expert 통과 후에도 residual 방식? 으로 넘겨주는거지?)
+    - Experiments show that Mixtral is able to successfully retrieve information from its context window of 32k tokens. (LC능력강조하는건지?)—regardless of the “sequence length” and the “location of the information in the sequence” (이 당시에 lost in the middle이 나온 시기였나? 그리고 이 당시에는 max token이 보통 몇이었지? 32k 입력이면 이 당시에는 혁신적이었던건가? 그리고 지금은 어떻게 이렇게 입력 토큰 크기 키웠지? 그리고 지금은 lost in the middle 현상 어느 ㅈ정도 해결되었나?)
+    - Mixtral Instruct는 SFT랑 DPO 적용.(이 과정이 구현 level에서 궁금함)
+    - also demonstrates reduced biases, and a more balanced sentiment profile in BBQ, BOLD (balanced “sentiment profile”이 뭐야?)
+    - vLLM에 integrate of Megablocks CUDA kernels for efficient inference(이게 뭔소리 Megablock? CUDA kernel? vLLM에 submit change는 뭘 하는거고 어떻게 하는건지?)
+    - (Skypilot은 뭔지? “allow deployment of vLLM endpoint on any instance in the cloud 이건 무슨 소린지?)
+    - 이 논문의 핵심은 결국 기존 MoE를 가장 단순하게 구현해 오픈 모델 최고 수준의 성능을 처음 달성한 것
+    - 비교 대상 계보는 Shazeer(2017, LSTM 기반 sparsely-gated MoE) → GShard(2020) → Switch Transformer(2021) → GLaM, ST-MoE(2021–22)
+    - Switch Transformer는 MoE를 블럭 하나 걸러 하나에 적용했으나, Mixtral은 모든 FFN에 적용 (왜 이전 모델들은 이렇게 안했나?)
+    - switch trasnformer는 encoder-decoder 모델이었다고 함 . mixtral은 decoder only. (이 차이는 또 왜 나타나는거지?)
+    - Mixtral은 token drop 안함 — 이전에 switch transformer에서 서빙 용이하게 하기 위해 expert 별로 최대 받을 수 있는 토큰 정해두고 넘어가면 drop 했던 나이브한 방식 — 대신 Megablocks 커널(커널이 뭐임 정확히) 사용. MoE 연산(MoE 연산이 뭔데?) 큰 sparse 행렬곱으로 바꿈. 그럼 expert마다 배정 토큰 수 달라도 처리 가능.
+    - 과거의 대형 MoE(GShard, GLaM, Switch의 대형 버전)는 대부분 비공개. 공개된 MoE는 dense 모델보다 성능이 떨어져서 “MoE는 대기업 내부용이고 다루기 까다롭다”는 인식. Mixtral은 오픈소스 모델 가운데 처음으로 최고 수준 성능에 도달한 MoE이고, Apache 2.0으로 공개. 이후 DeepSeek-MoE, Qwen-MoE 등 오픈 MoE가 쏟아진 출발점
+    - ST-MoE 등 이전 연구는 MoE가 fine-tuning에서 불안정하거나 overfitting되기 쉽다고 보고
+    - Mixtral은 SFT와 DPO라는 표준 레시피만으로 당시 최고의 오픈 chat 모델을 만들어, 이 우려를 실증적으로 상당 부분 해소
+    - “expert가 도메인별로 특화되지 않고 구문이나 토큰 수준에서 분업한다” (매우 흥미로운 결과. 이런게 궁금함 나는 실제로 expert들이 어떻게 나뉘는지. 구문이나 토큰 수준에서 분업한다는게 무슨 소린지? )
+    - 다만 ST-MoE도 encoder expert가 구두점이나 고유명사 같은 토큰 유형별로 특화된다고 보고한 바 있음
+    - Mistral 7B가 쓰던 **sliding window attention을 버리고, 32k 안의 모든 이전 토큰을 직접 보는 일반 full attention을 사용 (왜?)**
+    - Mistral 7B에서는 각 토큰이 직전 4,096개 토큰까지만 직접 attention할 수 있었음 . 그보다 먼 정보는 레이어 거치며 간접 전달. 예를 들어 1층에서 4k 거리를 보고, 2층에서 다시 4k를 보는 식으로 쌓여서, 이론적으로는 32층 × 4k ≈ 131k 거리까지 정보가 닿음. 하지만 이건 정보가 "흘러갈 수 있다"는 의미일 뿐이고, 멀리 있는 토큰을 정확히 꺼내 오는 능력은 약함. 대신 KV cache를 4k 크기로 고정해 두고 덮어쓰는 방식(rolling buffer)이라 메모리가 일정하다는 장점
+    - Mixtral에서는 32,768 토큰 안의 어느 위치든 모든 토큰이 모든 이전 토큰을 직접 attention(왜?). 여기서 “dense”는 window나 sparse 패턴 없이 attention 행렬 전체를 계산한다는 뜻. 여기서의 “dense”는 attention에 대한 말이고, MoE의 “sparse”와는 별개. 메모리 부담은 늘었지만, 논문의 passkey retrieval 100% 결과는 이 dense attention 덕분. KV head를 8개만 두는 GQA(`n_kv_heads: 8`)는 Mistral 7B에서 그대로 가져와서, 늘어난 KV cache 부담을 어느 정도 줄여줌. (아마 이 당시 경량화 전략을 att 쪽에서 했었는데, MoE로 FFN쪽 경량화가 가능해지니 다시 att를 dense로 한듯. flashattention같은 커널이 등장해서 — 2022년도 — att 계산 부담 줄어든 것도 영향 있겠고.)
+    - 주어진 입력 $x$에 대한 MoE 모듈의 출력은 전문가 네트워크(expert networks) 출력들의 가중합(weighted sum)으로 결정
+    - 이때 가중치는 게이팅 네트워크(gating network)의 출력
+    - $G(x)$를 구현하는 여러 대안적 방법들이 존재 — 게이팅
+    - 단순하면서도 성능이 뛰어난 방법 중 하나는 선형 레이어(linear layer)의 상위 $K$개(Top-K) 로짓(logits)에 소프트맥스(softmax)를 취해 구현하는 것
+    - 로짓 $\ell \in \mathbb{R}^n$의 좌표 중 $\ell_i$가 상위 $K$개에 속하면 $(\text{TopK}(\ell))_i := \ell_i$이고, 그렇지 않으면 $(\text{TopK}(\ell))_i := -\infty$ (이건 다른 기존 MoE들도 이렇게 했나? 왜 그렇지 않으면 무한대? 계산 피하려고?)
+    - MoE 레이어는 고성능 특수 커널을 통해 단일 GPU에서도 효율적으로 실행
+    - MoE 레이어는 표준 모델 병렬화(Model Parallelism) 기법과 **전문가 병렬화(Expert Parallelism, EP)** 라는 특수한 파티셔닝 전략을 통해 여러 GPU에 분산 배치 (EP, TP, 어제 봤던거. EP는 GPU별로 expert 나누는거고 TP는 tensor를 나누는거다. 차이는 뭐고 각각 언제 쓰는지가 궁금?)
+    - 참고로 EP는 부하 분산(load balancing) 측면에서 과제를 안고 있는데, 개별 GPU에 과부하가 걸리거나 연산 병목 현상이 발생하는 것을 방지하려면 작업량을 GPU 전반에 균등하게 분배하는 것이 필수적이기 때문(이건 무슨 소리지? 좀 더 설명)
+    - 저자들은 expert가 수학, 생물학, 철학 같은 도메인별로 특화되는지 확인.(어떻게 확인했나?)주제에 따른 뚜렷한 expert 할당 패턴은 나타나지 않았고, ArXiv, PubMed, PhilPapers의 expert 분포는 모든 레이어에서 매우 비슷. 대신 routing은 의미보다 형식을 따르는 것으로 보임. Python의 ‘self’나 영어의 ‘Question’처럼 여러 토큰으로 나뉘는 단어가 같은 expert로 가는 경우가 많았고, 코드의 들여쓰기 토큰은 특히 첫 레이어와 마지막 레이어에서 항상 같은 expert에 배정 (중요하고 흥미로운 부분)
+    - 연속된 토큰이 같은 expert를 고르는 경향(temporal locality)도 강했음. 무작위라면 첫 번째 선택 기준 반복률이 12.5%여야 하는데, layer 15에서는 약 24~28%로 훨씬 높았음. 이런 locality는 Expert Parallelism에서 특정 expert에 부하가 몰리는 원인이 될 수 있지만, 반대로 캐싱에 활용할 수도 있음.
+    - 즉 “MoE의 expert = 도메인 전문가”라는 직관은 적어도 이 모델에서는 맞지 않음. 실제 동작은 토큰 수준의 구문적 분업에 가까움.
