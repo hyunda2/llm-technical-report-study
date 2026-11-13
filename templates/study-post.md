@@ -1,18 +1,11 @@
 ---
 week: "{{week}}"
-status: "예정"
-author: ""
-study_scheduled: ""
-study_started: ""
-study_finished: ""
 paper_title: "{{paper_title}}"
 paper_url: "{{paper_url}}"
-source_verified_on: ""
 ---
 
 # {{week}}주차 — {{paper_title}}
 
-- 학습 상태: 예정 · 실제 시작일: 미정 · 완료일: 미정
 - 최초 공개 / 주요 수정: 확인 필요
 - Venue / Preprint 상태: 확인 필요
 - 저자 및 당시 소속: 확인 필요

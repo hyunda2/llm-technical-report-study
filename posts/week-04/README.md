@@ -1,18 +1,11 @@
 ---
 week: 4
-status: "예정"
-author: ""
-study_started: ""
-study_finished: ""
 paper_title: "DeepSeek-V3 Technical Report"
 paper_url: "https://arxiv.org/abs/2412.19437"
-source_verified_on: "2026-11-05"
 ---
 
 # 04주차 — DeepSeek-V3
 
-- 학습 상태: **예정**
-- 시작일: 미정
 - 최초 공개 / 주요 수정: 확인 필요
 - Venue / Preprint 상태: 확인 필요
 - 저자 및 당시 소속: 확인 필요
@@ -80,7 +73,6 @@ A: <!-- GPT 답변 한 문장. 원문 주장과 구분함. -->
 ## 9. 참고자료
 
 - 원문: [DeepSeek-V3 Technical Report](https://arxiv.org/abs/2412.19437)
-- 서지 확인일: 2026-11-05 (학습 수행을 뜻하지 않음)
 
 <!-- 추가 자료: 제목, 작성자/기관, 원문 링크, 실제 참조한 절·페이지와 확인일. -->
 <!-- 직접 인용은 최소한으로 하고 인용 표시와 근거를 남기기. -->

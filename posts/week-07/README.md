@@ -1,18 +1,11 @@
 ---
 week: 7
-status: "예정"
-author: ""
-study_started: ""
-study_finished: ""
 paper_title: "DeepSeek-V4.1-Flash: Pushing the Limits of KV Cache Compression"
 paper_url: "https://arxiv.org/abs/2609.19969"
-source_verified_on: "2026-11-05"
 ---
 
 # 07주차 — DeepSeek-V4.1-Flash
 
-- 학습 상태: **예정**
-- 시작일: 미정
 - 최초 공개 / 주요 수정: 확인 필요
 - Venue / Preprint 상태: 확인 필요
 - 저자 및 당시 소속: 확인 필요
@@ -78,7 +71,6 @@ A: <!-- GPT 답변 한 문장. 원문 주장과 구분함. -->
 ## 9. 참고자료
 
 - 원문: [DeepSeek-V4.1-Flash: Pushing the Limits of KV Cache Compression](https://arxiv.org/abs/2609.19969)
-- 서지 확인일: 2026-11-05 (학습 수행을 뜻하지 않음)
 - [공식 발표](https://www.deepseek.com/en/news/deepseek-v4-1-flash/)
 
 <!-- 추가 자료: 제목, 작성자/기관, 원문 링크, 실제 참조한 절·페이지와 확인일. -->

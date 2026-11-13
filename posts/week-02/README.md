@@ -1,12 +1,7 @@
 ---
 week: 2
-status: "진행 중"
-author: "hyunda2"
-study_started: ""
-study_finished: ""
 paper_title: "Mixtral of Experts"
 paper_url: "https://arxiv.org/abs/2401.04088"
-source_verified_on: "2026-11-13"
 ---
 
 # 02주차 — Mixtral of Experts 읽기 기록
@@ -19,7 +14,6 @@ source_verified_on: "2026-11-13"
 | Venue | 확인한 원문은 arXiv preprint임; 정식 학회·학술지 채택 정보는 확인 필요 |
 | 저자·소속 | Albert Q. Jiang 외 25명 · Mistral AI, [전체 저자](https://arxiv.org/abs/2401.04088) |
 | 논문·공식 코드 | [본문 v1](https://arxiv.org/html/2401.04088v1) · [공식 추론 구현](https://github.com/mistralai/mistral-inference) · [가중치·설정](https://huggingface.co/mistralai/Mixtral-8x7B-v0.1) |
-| 학습 상태 | 진행 중 · 실제 시작일 미기록 · 완료일 미정; 완료 여부는 별도 확인 전임 |
 
 📝 필사 정리 / 💭 제공된 내 생각·질문 / 🔎 추가 조사·GPT 해설 / ✅ 원문 대조·교정으로 구분함.
 [필사 원문](notes-original.md)과 [Q&A 원문](qa-original.md)은 첨부 파일 그대로 보존함; 교정 전 설명도 남아 있으므로 아래 정리와 구분해 읽음.
@@ -477,4 +471,4 @@ Expert가 곧 도메인 전문가라는 직관은 적어도 이 라우팅 관찰
 - 사용자 원본: [필사](notes-original.md) · [GPT Q&A](qa-original.md), 첨부 파일과 동일하게 보존함.
 - 주원문: [arXiv 이력](https://arxiv.org/abs/2401.04088) · [본문 v1](https://arxiv.org/html/2401.04088v1); §2 구조, §3·Table 2–4 성능, Figure 4 긴 문맥, §3.3 편향, §4·Figure 6 후학습·Arena, §5·Table 5 라우팅을 대조함.
 - 공식 공개: [Mistral 소개](https://mistral.ai/news/mixtral-of-experts/) · [가중치·config](https://huggingface.co/mistralai/Mixtral-8x7B-v0.1) · [추론 코드](https://github.com/mistralai/mistral-inference).
-- 보충 원문·공식 문서는 각 대목에 연결함; 원문 대조일 2026-11-13은 실제 학습 시작일·완료일과 별개임.
+- 보충 원문·공식 문서는 각 대목에 연결함.

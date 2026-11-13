@@ -1,13 +1,7 @@
 ---
 week: 1
-status: "완료"
-author: "hyunda2"
-study_scheduled: "2026-11-06T09:00:00+09:00"
-study_started: ""
-study_finished: "2026-11-06"
 paper_title: "Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity"
 paper_url: "https://arxiv.org/abs/2101.03961"
-source_verified_on: "2026-11-06"
 ---
 
 # 01주차 — Switch Transformers 읽기 기록
@@ -21,7 +15,6 @@ source_verified_on: "2026-11-06"
 | Venue | 정식 출판은 학회가 아닌 **JMLR 23(120):1–39, 2022**임; arXiv는 preprint·개정본 제공 경로임 |
 | 저자·소속 | William Fedus, Barret Zoph, Noam Shazeer · 논문 기재 소속 Google |
 | 논문·코드 | [arXiv 이력](https://arxiv.org/abs/2101.03961) · [확인한 본문 v3](https://arxiv.org/html/2101.03961v3) · [JMLR](https://jmlr.org/papers/v23/21-0998.html) · [JAX/T5X](https://github.com/google-research/t5x) · [TensorFlow/Mesh](https://github.com/tensorflow/mesh/blob/master/mesh_tensorflow/transformer/moe.py) |
-| 진행 상태 | **완료** · 예정 일시 2026-11-06 오전 9시, 한국 시간 · 실제 시작일 미기록 · 완료일 2026-11-06(사용자 확인) |
 
 ## 읽기 표시
 
@@ -631,4 +624,3 @@ Switch의 구체적인 선택은 위 §4.4처럼 Router 로컬 계산을 FP32로
 - 관련 원문: [2017 MoE](https://arxiv.org/html/1701.06538) · [ST-MoE](https://arxiv.org/html/2202.08906v2) · [Mixtral](https://arxiv.org/html/2401.04088) · [DeepSeekMoE](https://arxiv.org/abs/2401.06066) · [DeepSeek-V3](https://arxiv.org/html/2412.19437v2) · [MegaBlocks](https://arxiv.org/abs/2211.15841) · [FLAN](https://arxiv.org/abs/2109.01652).
 - 보충 개념: [JAX 공식 문서](https://docs.jax.dev/en/latest/) · [Knowledge Distillation](https://arxiv.org/abs/1503.02531) · [PyTorch AMP](https://docs.pytorch.org/docs/stable/amp.html).
 - 2차 전문화 조사: [The Expert Strikes Back](https://arxiv.org/abs/2604.02178) · [Understanding Multilingualism in Mixture-of-Experts LLMs](https://arxiv.org/abs/2601.14050).
-- 원문 대조일: 2026-11-06이며 실제 학습 시작일과는 별도임.
